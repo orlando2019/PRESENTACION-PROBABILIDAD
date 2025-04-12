@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probabilidad - Presentación Interactiva</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">Probabilidad</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="#definicion">Definición</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#eventos">Eventos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#espacio-muestral">Espacio Muestral</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#eventos-dependientes">Eventos Dependientes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#diagrama-arbol">Diagrama de Árbol</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#leyes-basicas">Leyes Básicas</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="text-center my-4">Probabilidad - Presentación Interactiva</h1>
+        
+        <!-- Sección 1: Definición de Probabilidad -->
+        <section id="definicion" class="mb-5">
+            <h2>1. Probabilidad - Definición</h2>
+            <div class="card">
+                <div class="card-body">
+                    <p>La probabilidad es una medida numérica que cuantifica la posibilidad de que ocurra un evento específico en un experimento aleatorio. Se expresa como un valor entre 0 y 1 (o como porcentaje entre 0% y 100%), donde:</p>
+                    <ul>
+                        <li>0 indica que el evento es imposible</li>
+                        <li>1 indica que el evento es seguro</li>
+                        <li>Un valor intermedio (como 0.5 o 50%) indica incertidumbre</li>
+                    </ul>
+                    <p>Fórmula básica:</p>
+                    <p>\[P(A) = \frac{\text{Número de resultados favorables para } A}{\text{Número total de resultados posibles}}\]</p>
+                    <div class="example">
+                        <h5>Ejemplo:</h5>
+                        <p>Supongamos que lanzas un dado de 6 caras. ¿Cuál es la probabilidad de obtener un 4?</p>
+                        <ul>
+                            <li>Resultados posibles: {1, 2, 3, 4, 5, 6} → Total = 6</li>
+                            <li>Resultados favorables: {4} → 1</li>
+                            <li>Probabilidad: \(P(4) = \frac{1}{6} \approx 0.1667\) o 16.67%</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 2: Eventos -->
+        <section id="eventos" class="mb-5">
+            <h2>2. Eventos Deterministas, Aleatorios y Probabilísticos</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>Eventos Deterministas</h5>
+                            <p>Son eventos cuyo resultado es completamente predecible si se conocen las condiciones iniciales.</p>
+                            <p><strong>Ejemplo:</strong> Si sueltas una pelota desde una altura, caerá al suelo debido a la gravedad.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>Eventos Aleatorios</h5>
+                            <p>Son eventos cuyo resultado no se puede predecir con certeza antes de que ocurran.</p>
+                            <p><strong>Ejemplo:</strong> Lanzar una moneda y obtener cara o cruz.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>Eventos Probabilísticos</h5>
+                            <p>Son eventos aleatorios a los que se les asigna una probabilidad para cuantificar la posibilidad de que ocurran.</p>
+                            <p><strong>Ejemplo:</strong> La probabilidad de sacar cara al lanzar una moneda es 0.5 (50%).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 3: Espacio Muestral -->
+        <section id="espacio-muestral" class="mb-5">
+            <h2>3. Espacio Muestral</h2>
+            <div class="card">
+                <div class="card-body">
+                    <p>El espacio muestral (\(S\)) es el conjunto de todos los resultados posibles de un experimento aleatorio.</p>
+                    <h5>Tipos:</h5>
+                    <ul>
+                        <li><strong>Discreto:</strong> Resultados contables (ej.: lanzar una moneda)</li>
+                        <li><strong>Continuo:</strong> Resultados no contables, como valores en un rango (ej.: medir la temperatura)</li>
+                    </ul>
+                    <div class="example">
+                        <h5>Ejemplos:</h5>
+                        <p><strong>Lanzar una moneda:</strong></p>
+                        <ul>
+                            <li>Espacio muestral: \(S = \{ \text{Cara}, \text{Cruz} \}\)</li>
+                            <li>Total de resultados: 2</li>
+                        </ul>
+                        <p><strong>Lanzar dos dados:</strong></p>
+                        <ul>
+                            <li>Espacio muestral: \(S = \{(1,1), (1,2), \ldots, (6,5), (6,6)\}\)</li>
+                            <li>Total de resultados: \(6 \times 6 = 36\)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 4: Eventos Dependientes e Independientes -->
+        <section id="eventos-dependientes" class="mb-5">
+            <h2>4. Diferencia entre Eventos Dependientes e Independientes</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>Eventos Independientes</h5>
+                            <p>Son eventos donde la ocurrencia de uno no afecta la probabilidad del otro.</p>
+                            <p>Fórmula:</p>
+                            <p>\[P(A \text{ y } B) = P(A) \cdot P(B)\]</p>
+                            <p><strong>Ejemplo:</strong> Lanzar una moneda y luego lanzar un dado. El resultado de la moneda no influye en el resultado del dado.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>Eventos Dependientes</h5>
+                            <p>Son eventos donde la ocurrencia de uno afecta la probabilidad del otro.</p>
+                            <p>Fórmula:</p>
+                            <p>\[P(A \text{ y } B) = P(A) \cdot P(B|A)\]</p>
+                            <p><strong>Ejemplo:</strong> Sacar dos cartas de una baraja sin reemplazo. La primera carta afecta la probabilidad de la segunda.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 5: Diagrama de Árbol -->
+        <section id="diagrama-arbol" class="mb-5">
+            <h2>5. Diagrama de Árbol para la Probabilidad</h2>
+            <div class="card">
+                <div class="card-body">
+                    <div class="tree-explanation">
+                        <h4>¿Qué es un Diagrama de Árbol?</h4>
+                        <p>Un diagrama de árbol es una herramienta visual que nos ayuda a representar y analizar experimentos probabilísticos secuenciales. Es especialmente útil cuando tenemos eventos dependientes, donde el resultado de un evento afecta la probabilidad del siguiente.</p>
+                        
+                        <div class="tree-steps">
+                            <div class="tree-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <p><strong>Estructura Básica:</strong> Comienza con un nodo raíz que representa el inicio del experimento. De este nodo salen ramas que representan los posibles resultados del primer evento.</p>
+                                </div>
+                            </div>
+                            <div class="tree-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <p><strong>Probabilidades:</strong> Cada rama tiene asociada una probabilidad. En eventos dependientes, estas probabilidades cambian según los resultados anteriores.</p>
+                                </div>
+                            </div>
+                            <div class="tree-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <p><strong>Multiplicación de Probabilidades:</strong> Para encontrar la probabilidad de una secuencia específica, multiplicamos las probabilidades a lo largo del camino correspondiente.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tree-diagram"></div>
+                    
+                    <div class="mt-3">
+                        <button id="simulate-btn" class="btn btn-primary">Simular Extracción</button>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="num-simulations" class="form-label">Número de simulaciones:</label>
+                        <input type="number" class="form-control" id="num-simulations" min="1" value="100">
+                    </div>
+                    <button class="btn btn-primary" onclick="runSimulation()">Simular</button>
+                    <button class="btn btn-secondary ms-2" onclick="resetSimulation()">Reiniciar</button>
+                    <div id="simulation-results" class="mt-3"></div>
+                    
+                    <div class="example mt-4">
+                        <h5>Ejemplo Detallado:</h5>
+                        <p>Consideremos una bolsa con 2 bolas rojas y 3 azules. Vamos a sacar dos bolas sin reemplazo:</p>
+                        
+                        <div class="tree-steps">
+                            <div class="tree-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <p><strong>Primera Extracción:</strong></p>
+                                    <ul>
+                                        <li>Probabilidad de sacar una bola roja: \(P(\text{Roja}_1) = \frac{2}{5}\)</li>
+                                        <li>Probabilidad de sacar una bola azul: \(P(\text{Azul}_1) = \frac{3}{5}\)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="tree-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <p><strong>Segunda Extracción (dependiente):</strong></p>
+                                    <p>Si la primera fue roja (quedan 1 roja y 3 azules):</p>
+                                    <ul>
+                                        <li>\(P(\text{Roja}_2|\text{Roja}_1) = \frac{1}{4}\)</li>
+                                        <li>\(P(\text{Azul}_2|\text{Roja}_1) = \frac{3}{4}\)</li>
+                                    </ul>
+                                    <p>Si la primera fue azul (quedan 2 rojas y 2 azules):</p>
+                                    <ul>
+                                        <li>\(P(\text{Roja}_2|\text{Azul}_1) = \frac{2}{4} = \frac{1}{2}\)</li>
+                                        <li>\(P(\text{Azul}_2|\text{Azul}_1) = \frac{2}{4} = \frac{1}{2}\)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="tree-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <p><strong>Probabilidades Conjuntas:</strong></p>
+                                    <ul>
+                                        <li>Roja y Roja: \(\frac{2}{5} \cdot \frac{1}{4} = \frac{2}{20} = \frac{1}{10}\)</li>
+                                        <li>Roja y Azul: \(\frac{2}{5} \cdot \frac{3}{4} = \frac{6}{20} = \frac{3}{10}\)</li>
+                                        <li>Azul y Roja: \(\frac{3}{5} \cdot \frac{1}{2} = \frac{3}{10}\)</li>
+                                        <li>Azul y Azul: \(\frac{3}{5} \cdot \frac{1}{2} = \frac{3}{10}\)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tree-explanation mt-4">
+                        <h4>Aplicaciones Prácticas</h4>
+                        <p>Los diagramas de árbol son útiles en:</p>
+                        <ul>
+                            <li>Análisis de decisiones empresariales</li>
+                            <li>Predicción de resultados en juegos de azar</li>
+                            <li>Evaluación de riesgos en proyectos</li>
+                            <li>Análisis de procesos secuenciales</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 6: Leyes Básicas -->
+        <section id="leyes-basicas" class="mb-5">
+            <h2>6. Leyes Básicas de Probabilidad</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>Teorema de la Suma</h5>
+                            <p>La probabilidad de que ocurra al menos uno de dos eventos \(A\) o \(B\):</p>
+                            <p>\[P(A \cup B) = P(A) + P(B) - P(A \cap B)\]</p>
+                            <p>Si \(A\) y \(B\) son mutuamente excluyentes:</p>
+                            <p>\[P(A \cup B) = P(A) + P(B)\]</p>
+                            <div class="example">
+                                <p><strong>Ejemplo:</strong> En una baraja de 52 cartas:</p>
+                                <p>\[P(\text{As} \cup \text{Corazones}) = \frac{4}{52} + \frac{13}{52} - \frac{1}{52} = \frac{16}{52} = \frac{4}{13}\]</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>Teorema de la Multiplicación</h5>
+                            <p>La probabilidad de que ocurran dos eventos \(A\) y \(B\) juntos:</p>
+                            <p>\[P(A \cap B) = P(A) \cdot P(B|A)\]</p>
+                            <p>Si son independientes:</p>
+                            <p>\[P(A \cap B) = P(A) \cdot P(B)\]</p>
+                            <div class="example">
+                                <p><strong>Ejemplo:</strong> Lanzar dos monedas:</p>
+                                <p>\[P(\text{Cara}_1 \cap \text{Cara}_2) = \frac{1}{2} \cdot \frac{1}{2} = \frac{1}{4}\]</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/script.js"></script>
+</body>
+</html> 

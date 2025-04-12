@@ -1,0 +1,23 @@
+# Archivos a excluir
+probilidad.html
+probabilidad.md
+probabilidad.MD
+pro.md
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de entorno
+.env
+.env.local
+
+# Archivos de dependencias
+node_modules/
+vendor/
+
+# Archivos de compilación
+dist/
+build/
+*.min.js
+*.min.css 
