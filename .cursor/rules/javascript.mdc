@@ -1,0 +1,38 @@
+---
+description: 
+globs: **/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx
+alwaysApply: false
+---
+---
+description: Reglas y convenciones para desarrollo JavaScript según ECMAScript 2022 y mejores prácticas de rendimiento y seguridad
+globs: ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"]
+alwaysApply: false
+---
+
+# JavaScript - ECMAScript 2022: https://tc39.es/ecma262/
+
+## Sintaxis y buenas prácticas
+- Usar modo estricto ('use strict') siempre
+- Preferir const y let sobre var para declaración de variables
+- Utilizar funciones flecha para callbacks
+- Usar template literals en lugar de concatenación de strings
+- Implementar desestructuración para objetos y arrays
+- Preferir async/await sobre promesas encadenadas
+- Usar módulos ES6 para organizar el código
+- Implementar manejo de errores con try-catch para código asíncrono
+
+## Rendimiento - Basado en Web Vitals: https://web.dev/vitals/
+- Optimizar imágenes con formato webp y técnicas responsive
+- Cargar scripts con defer o async cuando sea apropiado
+- Incluir CSS crítico en línea
+- Implementar lazy-loading para contenido debajo del pliegue
+- Usar font-display: swap o optional para fuentes web
+- Minificar todos los assets en producción
+
+## Seguridad - OWASP: https://owasp.org/www-project-top-ten/
+- Implementar Content Security Policy
+- Prevenir XSS mediante sanitización de datos de usuario
+- Usar HTTPS exclusivamente
+- Realizar validación de formularios tanto en cliente como en servidor
+- Implementar protección CSRF en formularios
+- Evitar eval() y otras funciones inseguras

@@ -1,0 +1,35 @@
+---
+description: 
+globs: **/*.css", "**/*.scss", "**/*.sass", "**/*.less
+alwaysApply: false
+---
+---
+description: Reglas y convenciones para desarrollo CSS basadas en estándares W3C y MDN
+globs: ["**/*.css", "**/*.scss", "**/*.sass", "**/*.less"]
+alwaysApply: false
+---
+
+# Convenciones CSS - Basadas en W3C y MDN
+
+## Nomenclatura
+- Utilizar metodología BEM (Block-Element-Modifier)
+- Nombres de clases en minúsculas separados por guiones
+- Minimizar uso de selectores ID, preferir clases
+- Mantener baja especificidad CSS
+
+## Estructura y organización
+- Usar normalize.css o reset equivalente
+- Implementar enfoque "mobile-first" para media queries
+- Preferir flexbox y grid sobre floats
+- Utilizar variables CSS para temas y colores principales
+
+## Buenas prácticas
+- Evitar el uso de !important excepto en utilidades
+- Optimizar rendimiento con CSS crítico en línea
+- Asegurar contraste de color mínimo 4.5:1 para accesibilidad
+- Implementar lazy-loading para contenido debajo del pliegue
+
+## Rendimiento
+- Minificación requerida en producción
+- Optimizar imágenes (webp y responsive)
+- Usar font-display: swap o optional

@@ -1,0 +1,33 @@
+---
+description: 
+globs: **/*.html", "**/*.htm", "**/*.jsx", "**/*.tsx
+alwaysApply: false
+---
+---
+description: Reglas y convenciones para desarrollo HTML5 y accesibilidad WCAG 2.1
+globs: ["**/*.html", "**/*.htm", "**/*.jsx", "**/*.tsx"]
+alwaysApply: false
+---
+
+# HTML5 - Basado en W3C: https://www.w3.org/TR/html5/
+
+## Estructura semántica
+- Usar doctype HTML5 estándar en todos los documentos
+- Utilizar elementos semánticos (header, nav, main, section, article, footer)
+- Incluir meta viewport para diseño responsive
+- Especificar atributo lang en el elemento html
+- Proporcionar texto alternativo para todas las imágenes
+- Asociar etiquetas con cada input de formulario
+
+## Accesibilidad WCAG 2.1: https://www.w3.org/WAI/standards-guidelines/wcag/
+- Estructurar encabezados de forma lógica y jerárquica (h1-h6)
+- Implementar landmarks ARIA para navegación
+- Mantener un contraste de color mínimo de 4.5:1
+- Asegurar navegación completa por teclado
+- Proporcionar nombres accesibles para elementos interactivos
+- Implementar skip-links para usuarios de teclado
+
+## Convenciones de archivos
+- Nombres de archivos en minúsculas con guiones (lowercase-with-hyphens)
+- Nombres de directorios en minúsculas con guiones (lowercase-with-hyphens)
+- Organizar archivos en directorios lógicos por funcionalidad
