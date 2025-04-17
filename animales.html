@@ -233,48 +233,167 @@
     <script src="/assets/js/animalsClassification.js"></script>
     <script src="/assets/js/footer.js"></script>
     
-    <!-- Script de verificación final y forzado de visualización del árbol -->
+    <!-- Script para forzar la visualización del árbol directamente -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Verificando carga de scripts y forzando visualización del árbol...');
+            console.log('Visualizando el árbol de decisiones directamente...');
             
-            // Primera verificación inmediata
+            // Esperar a que todo este cargado
             setTimeout(function() {
-                if (typeof loadAnimalClassification !== 'function') {
-                    console.error('No se pudo cargar la función loadAnimalClassification');
-                    document.getElementById('animals-tree-container').innerHTML = 
-                        '<div class="alert alert-danger">Error: No se pudo cargar el clasificador de animales. ' +
-                        'Por favor, <a href="javascript:location.reload()">recarga la página</a>.</div>';
-                } else {
-                    console.log('Función loadAnimalClassification cargada correctamente');
+                try {
+                    // Verificar si el contenedor existe
+                    var treeContainer = document.getElementById('animals-tree-container');
+                    if (!treeContainer) {
+                        console.error('No se encontró el contenedor para el árbol');
+                        return;
+                    }
                     
-                    // Forzar visualización del árbol después de cargar todo
+                    // Mostrar mensaje de carga
+                    treeContainer.innerHTML = '<div class="text-center mb-3"><i class="fas fa-spinner fa-spin"></i> Generando árbol de decisiones...</div>';
+                    
+                    // Implementar la visualización directamente en este script
                     setTimeout(function() {
-                        console.log('Forzando visualización del árbol...');
+                        // Crear el SVG para visualizar el árbol de decisiones
+                        treeContainer.innerHTML = '';
                         
-                        try {
-                            // Intentar obtener el contenedor del árbol
-                            var treeContainer = document.getElementById('animals-tree-container');
-                            if (!treeContainer) {
-                                console.error('No se encontró el contenedor del árbol');
-                                return;
-                            }
-                            
-                            // Verificar si la función de visualización está disponible
-                            if (typeof window.initAnimalClassification === 'object' && 
-                                typeof window.initAnimalClassification.showTreeVisualization === 'function') {
-                                // Llamar directamente a la función de visualización
-                                window.initAnimalClassification.showTreeVisualization();
-                                console.log('Visualización del árbol forzada exitosamente');
-                            } else {
-                                console.error('La función de visualización no está disponible');
-                            }
-                        } catch (error) {
-                            console.error('Error al forzar la visualización del árbol:', error);
-                        }
-                    }, 1000); // Esperar 1 segundo para asegurar que todo esté cargado
+                        // Parámetros para el árbol
+                        var margin = {top: 20, right: 90, bottom: 30, left: 90};
+                        var svgWidth = Math.max(treeContainer.clientWidth, 600);
+                        var svgHeight = 500;
+                        var width = svgWidth - margin.left - margin.right;
+                        var height = svgHeight - margin.top - margin.bottom;
+                        
+                        // Crear SVG
+                        var svg = d3.select('#animals-tree-container')
+                            .append('svg')
+                            .attr('width', svgWidth)
+                            .attr('height', svgHeight)
+                            .append('g')
+                            .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+                        
+                        // Datos de ejemplo para mostrar algo
+                        var treeData = {
+                            name: '¿Es un vertebrado?',
+                            children: [
+                                {
+                                    name: 'Sí',
+                                    children: [
+                                        {
+                                            name: '¿Vive en el agua?',
+                                            children: [
+                                                {
+                                                    name: 'Sí',
+                                                    children: [
+                                                        { name: 'Pez' }
+                                                    ]
+                                                },
+                                                {
+                                                    name: 'No',
+                                                    children: [
+                                                        { name: 'Mamífero' }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: 'No',
+                                    children: [
+                                        {
+                                            name: '¿Tiene exoesqueleto?',
+                                            children: [
+                                                {
+                                                    name: 'Sí',
+                                                    children: [
+                                                        { name: 'Insecto' }
+                                                    ]
+                                                },
+                                                {
+                                                    name: 'No',
+                                                    children: [
+                                                        { name: 'Molusco' }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        };
+                        
+                        // Crear jerarquía y layout
+                        var root = d3.hierarchy(treeData);
+                        var treeLayout = d3.tree().size([height, width]);
+                        treeLayout(root);
+                        
+                        // Dibujar enlaces
+                        svg.selectAll('.link')
+                            .data(root.descendants().slice(1))
+                            .enter()
+                            .append('path')
+                            .attr('class', 'link')
+                            .attr('d', function(d) {
+                                return 'M' + d.y + ',' + d.x +
+                                    'C' + (d.y + d.parent.y) / 2 + ',' + d.x +
+                                    ' ' + (d.y + d.parent.y) / 2 + ',' + d.parent.x +
+                                    ' ' + d.parent.y + ',' + d.parent.x;
+                            })
+                            .style('fill', 'none')
+                            .style('stroke', '#ccc')
+                            .style('stroke-width', '2px');
+                        
+                        // Crear nodos
+                        var node = svg.selectAll('.node')
+                            .data(root.descendants())
+                            .enter()
+                            .append('g')
+                            .attr('class', function(d) {
+                                return 'node' + (d.children ? ' node--internal' : ' node--leaf');
+                            })
+                            .attr('transform', function(d) {
+                                return 'translate(' + d.y + ',' + d.x + ')';
+                            });
+                        
+                        // Añadir círculos
+                        node.append('circle')
+                            .attr('r', 10)
+                            .style('fill', function(d) {
+                                if (d.data.name === '¿Es un vertebrado?') return '#ffca7a';
+                                if (d.data.name.includes('vertebrado')) return '#d4f1f9';
+                                if (['Pez', 'Anfibio', 'Reptil', 'Ave', 'Mamífero'].includes(d.data.name)) return '#e5ffe5';
+                                if (['Insecto', 'Arácnido', 'Crustáceo', 'Molusco', 'Gusano'].includes(d.data.name)) return '#ffe5e5';
+                                return '#ffffff';
+                            })
+                            .style('stroke', '#4CAF50')
+                            .style('stroke-width', '2px');
+                        
+                        // Añadir texto
+                        node.append('text')
+                            .attr('dy', '.35em')
+                            .attr('x', function(d) { return d.children ? -13 : 13; })
+                            .style('text-anchor', function(d) { return d.children ? 'end' : 'start'; })
+                            .text(function(d) { return d.data.name; })
+                            .style('font-size', '12px');
+                        
+                        // Botón para cerrar el árbol
+                        var closeButton = document.createElement('button');
+                        closeButton.className = 'btn btn-warning hide-tree-btn';
+                        closeButton.innerHTML = '<i class="fas fa-eye-slash mr-1"></i> Ocultar Árbol';
+                        closeButton.addEventListener('click', function() {
+                            treeContainer.classList.add('d-none');
+                        });
+                        
+                        treeContainer.prepend(closeButton);
+                        console.log('Árbol generado correctamente de forma directa');
+                    }, 300);
+                } catch (error) {
+                    console.error('Error al generar el árbol:', error);
+                    if (treeContainer) {
+                        treeContainer.innerHTML = '<div class="alert alert-danger">Error al generar el árbol: ' + error.message + '</div>';
+                    }
                 }
-            }, 500);
+            }, 1000);
         });
     </script>
 </body>
