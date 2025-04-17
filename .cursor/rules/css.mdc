@@ -1,5 +1,10 @@
 ---
 description: Reglas y convenciones para desarrollo CSS basadas en estándares W3C y MDN
+globs: 
+alwaysApply: false
+---
+---
+description: Reglas y convenciones para desarrollo CSS basadas en estándares W3C y MDN
 globs: ["**/*.css", "**/*.scss", "**/*.sass", "**/*.less"]
 alwaysApply: false
 ---
