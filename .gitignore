@@ -9,9 +9,12 @@ Thumbs.db
 
 # Archivos de entorno y configuración
 .cursorrules
+.cursor
 .env
 .env.local
 .windsurfrules
+netlify.toml
+windsurf_deployment.yaml
 
 # Dependencias
 node_modules/
@@ -21,9 +24,4 @@ vendor/
 *.min.css
 *.min.js
 build/
-dist/# Archivos de entorno y configuración
-.cursorrules
-.cursor
-.env
-.env.local
-.windsurfrules
+dist/
