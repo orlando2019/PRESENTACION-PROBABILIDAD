@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Siempre usa la ruta absoluta desde la raíz del sitio
     const footerPath = '/assets/pages/footer.html';
-    console.log('Cargando footer desde:', footerPath);
+    // Cargar footer silenciosamente
     fetch(footerPath)
         .then(response => {
             if (!response.ok) {
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Insertar el footer en el contenedor y asegurar ancho completo
             const footerContainer = document.getElementById('footer-container');
             if (!footerContainer) {
-                console.error('No se encontró el contenedor del footer');
+                // Error silencioso
                 return;
             }
             
@@ -30,9 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const yearElement = document.getElementById('current-year');
                 if (yearElement) {
                     yearElement.textContent = new Date().getFullYear();
-                } else {
-                    console.warn('No se encontró el elemento para el año actual');
-                }
+                } // Error silencioso si no existe
                 
                 // Personalizar el título del footer según la página
                 const pageTitle = document.title;
@@ -46,14 +44,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     } else {
                         footerTitle.textContent = 'Simulador de Probabilidad';
                     }
-                } else {
-                    console.warn('No se encontró el elemento del título del footer');
-                }
+                } // Error silencioso si no existe
             }, 100); // Esperar 100ms para asegurar que el DOM esté listo
-            
-            console.log('Footer cargado correctamente');
         })
         .catch(error => {
-            console.error('Error al cargar el footer:', error);
+            // Error silencioso al cargar el footer
         });
 }); 

@@ -6,14 +6,13 @@
 // Función global para inicializar la clasificación de animales
 // Esta función será llamada cuando se cargue la pestaña de animales
 function loadAnimalClassification() {
-    console.log("Inicializando la clasificación de animales...");
+    // Inicializar sin mensajes de consola
     window.handleAnswer = function(event) {
         // Recuperar la respuesta del botón clickeado
         var answer = '';
         if (event && event.target) {
             answer = event.target.dataset.answer || event.target.dataset.value || event.target.innerText;
         }
-        console.log('Manejando respuesta:', answer);
         
         // Buscar el objeto initAnimalClassification para usar sus métodos internos
         if (window._animalClassInstance && typeof window._animalClassInstance.handleAnswer === 'function') {
@@ -588,12 +587,11 @@ function initAnimalClassification() {
     // Mostrar árbol visual completo
     // Función para mostrar el árbol de decisiones
     function showTreeVisualization() {
-        console.log('Intentando mostrar el árbol de decisiones...');
+        // Mostrar silenciosamente
 
         // Verificar si el contenedor existe
         if (!animalsTreeContainer) {
-            console.error('No se encontró el contenedor para el árbol (id: animals-tree-container)');
-            // Intentar obtener el contenedor nuevamente
+            // Intentar obtener el contenedor nuevamente sin mensajes de error
             animalsTreeContainer = document.getElementById('animals-tree-container');
             if (!animalsTreeContainer) {
                 showError('No se encontró el contenedor para el árbol');
@@ -738,9 +736,9 @@ function initAnimalClassification() {
                     });
                     
                     animalsTreeContainer.prepend(closeButton);
-                    console.log('Árbol de decisiones mostrado correctamente');
+                    // Árbol mostrado correctamente (sin log)
                 } catch (error) {
-                    console.error('Error al mostrar el árbol:', error);
+                    // Error silencioso
                     animalsTreeContainer.innerHTML = '<div class="alert alert-danger">Error al generar el árbol: ' + error.message + '</div>';
                 }
             }, 100); // Fin del setTimeout
