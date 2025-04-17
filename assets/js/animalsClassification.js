@@ -569,7 +569,8 @@ function initAnimalClassification() {
     }
     
     // Mostrar árbol visual completo
-    function showTreeVisualization() {
+    // Exponemos la funciu00f3n directamente en el objeto global para que pueda ser llamada desde fuera
+    initAnimalClassification.showTreeVisualization = function() {
         console.log('Intentando mostrar el árbol de decisiones...');
         
         // Verificar si el contenedor existe
