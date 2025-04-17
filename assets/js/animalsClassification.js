@@ -7,13 +7,30 @@
 // Esta función será llamada cuando se cargue la pestaña de animales
 function loadAnimalClassification() {
     console.log("Inicializando la clasificación de animales...");
-    initAnimalClassification();
+    window.handleAnswer = function(event) {
+        // Recuperar la respuesta del botón clickeado
+        var answer = '';
+        if (event && event.target) {
+            answer = event.target.dataset.answer || event.target.dataset.value || event.target.innerText;
+        }
+        console.log('Manejando respuesta:', answer);
+        
+        // Buscar el objeto initAnimalClassification para usar sus métodos internos
+        if (window._animalClassInstance && typeof window._animalClassInstance.handleAnswer === 'function') {
+            window._animalClassInstance.handleAnswer(event);
+        }
+    };
+    
+    // Crear una instancia global
+    window._animalClassInstance = initAnimalClassification();
 }
 
 // Función para inicializar la clasificación (evita conflictos de alcance)
 function initAnimalClassification() {
+    // Crear un objeto para exportar las funciones públicas
+    const publicAPI = {};
     // Hacer disponible la referencia para el script de conexión
-    window.initAnimalClassification = initAnimalClassification;
+    window.initAnimalClassification = publicAPI;
     
     // Instancia del árbol de decisiones
     const animalTree = new DecisionTree();
@@ -569,10 +586,10 @@ function initAnimalClassification() {
     }
     
     // Mostrar árbol visual completo
-    // Exponemos la funciu00f3n directamente en el objeto global para que pueda ser llamada desde fuera
-    initAnimalClassification.showTreeVisualization = function() {
+    // Función para mostrar el árbol de decisiones
+    function showTreeVisualization() {
         console.log('Intentando mostrar el árbol de decisiones...');
-        
+
         // Verificar si el contenedor existe
         if (!animalsTreeContainer) {
             console.error('No se encontró el contenedor para el árbol (id: animals-tree-container)');
@@ -735,11 +752,22 @@ function initAnimalClassification() {
     } else {
         initializeTree();
     }
-
+    
+    // Exportar las funciones públicas al objeto API
+    publicAPI.showTreeVisualization = showTreeVisualization;
+    publicAPI.handleAnswer = handleAnswer;
+    publicAPI.resetClassification = resetClassification;
+    publicAPI.animalTree = animalTree;
+    
     // Mostrar el árbol de decisiones automáticamente al cargar la página
-    if (typeof initAnimalClassification.showTreeVisualization === 'function') {
-        initAnimalClassification.showTreeVisualization();
-    }
+    setTimeout(function() {
+        if (publicAPI.showTreeVisualization) {
+            publicAPI.showTreeVisualization();
+        }
+    }, 1000);
+    
+    // Retornar el objeto API que contiene las funciones públicas
+    return publicAPI;
 }
 
 // Iniciar la clasificación de animales si esta página se carga directamente
