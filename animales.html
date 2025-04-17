@@ -215,11 +215,39 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
+    
+    <!-- Script para verificar carga de scripts -->
+    <script>
+        console.log('Verificando carga de scripts en animales.html...');
+        window.addEventListener('error', function(e) {
+            if (e.filename && e.filename.includes('animalsClassification.js')) {
+                console.error('Error al cargar animalsClassification.js:', e.message);
+                alert('Error al cargar el clasificador de animales. Por favor, recarga la página.');
+            }
+        }, true);
+    </script>
+    
     <!-- Primero cargar la clase DecisionTree -->
-    <script src="assets/js/decisionTree.js"></script>
+    <script src="/assets/js/decisionTree.js"></script>
     <!-- Luego cargar el script de clasificación de animales -->
-    <script src="assets/js/animalsClassification.js"></script>
-    <script src="assets/js/footer.js"></script>
+    <script src="/assets/js/animalsClassification.js"></script>
+    <script src="/assets/js/footer.js"></script>
+    
+    <!-- Script de verificación final -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                if (typeof loadAnimalClassification !== 'function') {
+                    console.error('No se pudo cargar la función loadAnimalClassification');
+                    document.getElementById('animals-tree-container').innerHTML = 
+                        '<div class="alert alert-danger">Error: No se pudo cargar el clasificador de animales. ' +
+                        'Por favor, <a href="javascript:location.reload()">recarga la página</a>.</div>';
+                } else {
+                    console.log('Función loadAnimalClassification cargada correctamente');
+                }
+            }, 500);
+        });
+    </script>
 </body>
 
 </html>
