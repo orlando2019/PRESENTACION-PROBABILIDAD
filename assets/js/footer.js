@@ -3,6 +3,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const footerPath = '/assets/pages/footer.html';
     console.log('Cargando footer desde:', footerPath);
     fetch(footerPath)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Error al cargar el footer: ${response.status}`);
+            }
+            return response.text();
+        })
         .then(data => {
             // Insertar el footer en el contenedor y asegurar ancho completo
             const footerContainer = document.getElementById('footer-container');
