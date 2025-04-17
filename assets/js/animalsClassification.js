@@ -570,149 +570,163 @@ function initAnimalClassification() {
     
     // Mostrar árbol visual completo
     function showTreeVisualization() {
+        console.log('Intentando mostrar el árbol de decisiones...');
+        
+        // Verificar si el contenedor existe
         if (!animalsTreeContainer) {
-            showError('No se encontró el contenedor para el árbol');
-            return;
+            console.error('No se encontró el contenedor para el árbol (id: animals-tree-container)');
+            // Intentar obtener el contenedor nuevamente
+            animalsTreeContainer = document.getElementById('animals-tree-container');
+            if (!animalsTreeContainer) {
+                showError('No se encontró el contenedor para el árbol');
+                return;
+            }
         }
         
         // Limpiar contenedor de árbol y calcular dimensiones dinámicas
-        animalsTreeContainer.innerHTML = '';
-        const margin = {top: 20, right: 90, bottom: 30, left: 90};
-        const containerRect = animalsTreeContainer.getBoundingClientRect();
-        const svgWidth = containerRect.width;
-        const svgHeight = containerRect.height;
-        const width = svgWidth - margin.left - margin.right;
-        const height = svgHeight - margin.top - margin.bottom;
+        animalsTreeContainer.innerHTML = '<div class="text-center mb-3"><i class="fas fa-spinner fa-spin"></i> Generando árbol de decisiones...</div>';
         
-        try {
-            // Convertir los datos del árbol al formato necesario para D3
-            function convertTreeData(node) {
-                if (!node) return null;
+        // Dar tiempo para que el DOM se actualice
+        setTimeout(() => {
+            try {
+                // Limpiar contenedor y preparar para SVG
+                animalsTreeContainer.innerHTML = '';
+                const margin = {top: 20, right: 90, bottom: 30, left: 90};
+                const containerRect = animalsTreeContainer.getBoundingClientRect();
+                const svgWidth = Math.max(containerRect.width, 600); // Mínimo 600px de ancho
+                const svgHeight = Math.max(containerRect.height, 500); // Mínimo 500px de alto
+                const width = svgWidth - margin.left - margin.right;
+                const height = svgHeight - margin.top - margin.bottom;
                 
-                const result = {
-                    name: node.question || node.result,
-                    children: []
-                };
-                
-                if (node.options) {
-                    node.options.forEach(option => {
-                        const child = {
-                            name: option.answer,
-                            children: []
-                        };
-                        
-                        if (option.result) {
-                            child.children.push({
-                                name: option.result
-                            });
-                        } else if (option.next) {
-                            const nextNode = convertTreeData(option.next);
-                            if (nextNode) {
-                                child.children.push(nextNode);
+                // Función para convertir los datos del árbol al formato necesario para D3
+                function convertTreeData(node) {
+                    if (!node) return null;
+                    
+                    const result = {
+                        name: node.question || node.result,
+                        children: []
+                    };
+                    
+                    if (node.options) {
+                        node.options.forEach(option => {
+                            const child = {
+                                name: option.answer,
+                                children: []
+                            };
+                            
+                            if (option.result) {
+                                child.children.push({
+                                    name: option.result
+                                });
+                            } else if (option.next) {
+                                const nextNode = convertTreeData(option.next);
+                                if (nextNode) {
+                                    child.children.push(nextNode);
+                                }
                             }
-                        }
-                        
-                        result.children.push(child);
-                    });
+                            
+                            result.children.push(child);
+                        });
+                    }
+                    
+                    return result;
                 }
                 
-                return result;
-            }
-            
-            // Crear SVG dinámico para llenar 100% del contenedor
-            const svg = d3.select('#animals-tree-container')
-                .append('svg')
-                .attr('width', svgWidth)
-                .attr('height', svgHeight)
-                .append('g')
-                .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-            
-            // Configurar el árbol para ocupar todo el espacio disponible
-            const treeLayout = d3.tree().size([height, width]);
-            
-            // Convertir datos
-            const treeJson = convertTreeData(animalTree.root); // Usar root, no currentNode
-            
-            if (!treeJson) {
-                animalsTreeContainer.innerHTML = '<div class="alert alert-warning">No se pudo generar la visualización del árbol</div>';
-                return;
-            }
-            
-            // Crear jerarquía
-            const root = d3.hierarchy(treeJson);
-            
-            // Calcular posiciones
-            treeLayout(root);
-            
-            // Dibujar enlaces
-            svg.selectAll('.link')
-                .data(root.descendants().slice(1))
-                .enter()
-                .append('path')
-                .attr('class', 'link')
-                .attr('d', d => {
-                    return 'M' + d.y + ',' + d.x
-                        + 'C' + (d.y + d.parent.y) / 2 + ',' + d.x
-                        + ' ' + (d.y + d.parent.y) / 2 + ',' + d.parent.x
-                        + ' ' + d.parent.y + ',' + d.parent.x;
-                })
-                .style('fill', 'none')
-                .style('stroke', '#ccc')
-                .style('stroke-width', '2px');
-            
-            // Crear nodos
-            const node = svg.selectAll('.node')
-                .data(root.descendants())
-                .enter()
-                .append('g')
-                .attr('class', d => 'node' + (d.children ? ' node--internal' : ' node--leaf'))
-                .attr('transform', d => 'translate(' + d.y + ',' + d.x + ')');
-            
-            // Añadir círculos a los nodos
-            node.append('circle')
-                .attr('r', 10)
-                .style('fill', d => {
-                    // Colorear según tipo o nivel
-                    if (d.data.name === animalTree.currentNode.question) return '#ffca7a';
-                    if (d.data.name.includes('vertebrado')) return '#d4f1f9';
-                    if (['Pez', 'Anfibio', 'Reptil', 'Ave', 'Mamífero'].includes(d.data.name)) return '#e5ffe5';
-                    if (['Insecto', 'Arácnido', 'Crustáceo', 'Molusco', 'Gusano'].includes(d.data.name)) return '#ffe5e5';
-                    return '#ffffff';
-                })
-                .style('stroke', '#4CAF50')
-                .style('stroke-width', '2px');
-            
-            // Añadir etiquetas de texto
-            node.append('text')
-                .attr('dy', '.35em')
-                .attr('x', d => d.children ? -13 : 13)
-                .style('text-anchor', d => d.children ? 'end' : 'start')
-                .text(d => d.data.name)
-                .style('font-size', '12px')
-                .each(function(d) {
-                    // Truncar texto muy largo
-                    const text = d3.select(this);
-                    if (text.node().getComputedTextLength() > 120) {
-                        let shortText = d.data.name.substring(0, 20) + '...';
-                        text.text(shortText);
-                    }
-                });
+                // Crear SVG dinámico para llenar 100% del contenedor
+                const svg = d3.select('#animals-tree-container')
+                    .append('svg')
+                    .attr('width', svgWidth)
+                    .attr('height', svgHeight)
+                    .append('g')
+                    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
                 
-            // Botón para cerrar el árbol
-            const closeButton = document.createElement('button');
-            closeButton.className = 'btn btn-warning hide-tree-btn';
-            closeButton.innerHTML = '<i class="fas fa-eye-slash mr-1"></i> Ocultar Árbol';
-            closeButton.addEventListener('click', function() {
-                animalsTreeContainer.classList.add('d-none');
-            });
-            
-            animalsTreeContainer.prepend(closeButton);
-            
-        } catch (error) {
-            console.error('Error al mostrar el árbol:', error);
-            animalsTreeContainer.innerHTML = '<div class="alert alert-danger">Error al generar el árbol: ' + error.message + '</div>';
+                // Configurar el árbol para ocupar todo el espacio disponible
+                const treeLayout = d3.tree().size([height, width]);
+                
+                // Convertir datos
+                const treeJson = convertTreeData(animalTree.root); // Usar root, no currentNode
+                
+                if (!treeJson) {
+                    animalsTreeContainer.innerHTML = '<div class="alert alert-warning">No se pudo generar la visualización del árbol</div>';
+                    return;
+                }
+                
+                // Crear jerarquía
+                const root = d3.hierarchy(treeJson);
+                
+                // Calcular posiciones
+                treeLayout(root);
+                
+                // Dibujar enlaces
+                svg.selectAll('.link')
+                    .data(root.descendants().slice(1))
+                    .enter()
+                    .append('path')
+                    .attr('class', 'link')
+                    .attr('d', d => {
+                        return 'M' + d.y + ',' + d.x
+                            + 'C' + (d.y + d.parent.y) / 2 + ',' + d.x
+                            + ' ' + (d.y + d.parent.y) / 2 + ',' + d.parent.x
+                            + ' ' + d.parent.y + ',' + d.parent.x;
+                    })
+                    .style('fill', 'none')
+                    .style('stroke', '#ccc')
+                    .style('stroke-width', '2px');
+                
+                // Crear nodos
+                const node = svg.selectAll('.node')
+                    .data(root.descendants())
+                    .enter()
+                    .append('g')
+                    .attr('class', d => 'node' + (d.children ? ' node--internal' : ' node--leaf'))
+                    .attr('transform', d => 'translate(' + d.y + ',' + d.x + ')');
+                
+                // Añadir círculos a los nodos
+                node.append('circle')
+                    .attr('r', 10)
+                    .style('fill', d => {
+                        // Colorear según tipo o nivel
+                        if (d.data.name === animalTree.currentNode.question) return '#ffca7a';
+                        if (d.data.name.includes('vertebrado')) return '#d4f1f9';
+                        if (['Pez', 'Anfibio', 'Reptil', 'Ave', 'Mamífero'].includes(d.data.name)) return '#e5ffe5';
+                        if (['Insecto', 'Arácnido', 'Crustáceo', 'Molusco', 'Gusano'].includes(d.data.name)) return '#ffe5e5';
+                        return '#ffffff';
+                    })
+                    .style('stroke', '#4CAF50')
+                    .style('stroke-width', '2px');
+                
+                // Añadir etiquetas de texto
+                node.append('text')
+                    .attr('dy', '.35em')
+                    .attr('x', d => d.children ? -13 : 13)
+                    .style('text-anchor', d => d.children ? 'end' : 'start')
+                    .text(d => d.data.name)
+                    .style('font-size', '12px')
+                    .each(function(d) {
+                        // Truncar texto muy largo
+                        const text = d3.select(this);
+                        if (text.node().getComputedTextLength() > 120) {
+                            let shortText = d.data.name.substring(0, 20) + '...';
+                            text.text(shortText);
+                        }
+                    });
+                    
+                // Botón para cerrar el árbol
+                const closeButton = document.createElement('button');
+                    closeButton.className = 'btn btn-warning hide-tree-btn';
+                    closeButton.innerHTML = '<i class="fas fa-eye-slash mr-1"></i> Ocultar Árbol';
+                    closeButton.addEventListener('click', function() {
+                        animalsTreeContainer.classList.add('d-none');
+                    });
+                    
+                    animalsTreeContainer.prepend(closeButton);
+                    console.log('Árbol de decisiones mostrado correctamente');
+                } catch (error) {
+                    console.error('Error al mostrar el árbol:', error);
+                    animalsTreeContainer.innerHTML = '<div class="alert alert-danger">Error al generar el árbol: ' + error.message + '</div>';
+                }
+            }, 100); // Fin del setTimeout
         }
-    }
     
     // Inicializar cuando se cargue el DOM
     if (document.readyState === 'loading') {

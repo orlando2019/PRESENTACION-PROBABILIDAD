@@ -233,9 +233,12 @@
     <script src="/assets/js/animalsClassification.js"></script>
     <script src="/assets/js/footer.js"></script>
     
-    <!-- Script de verificación final -->
+    <!-- Script de verificación final y forzado de visualización del árbol -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('Verificando carga de scripts y forzando visualización del árbol...');
+            
+            // Primera verificación inmediata
             setTimeout(function() {
                 if (typeof loadAnimalClassification !== 'function') {
                     console.error('No se pudo cargar la función loadAnimalClassification');
@@ -244,6 +247,32 @@
                         'Por favor, <a href="javascript:location.reload()">recarga la página</a>.</div>';
                 } else {
                     console.log('Función loadAnimalClassification cargada correctamente');
+                    
+                    // Forzar visualización del árbol después de cargar todo
+                    setTimeout(function() {
+                        console.log('Forzando visualización del árbol...');
+                        
+                        try {
+                            // Intentar obtener el contenedor del árbol
+                            var treeContainer = document.getElementById('animals-tree-container');
+                            if (!treeContainer) {
+                                console.error('No se encontró el contenedor del árbol');
+                                return;
+                            }
+                            
+                            // Verificar si la función de visualización está disponible
+                            if (typeof window.initAnimalClassification === 'object' && 
+                                typeof window.initAnimalClassification.showTreeVisualization === 'function') {
+                                // Llamar directamente a la función de visualización
+                                window.initAnimalClassification.showTreeVisualization();
+                                console.log('Visualización del árbol forzada exitosamente');
+                            } else {
+                                console.error('La función de visualización no está disponible');
+                            }
+                        } catch (error) {
+                            console.error('Error al forzar la visualización del árbol:', error);
+                        }
+                    }, 1000); // Esperar 1 segundo para asegurar que todo esté cargado
                 }
             }, 500);
         });
