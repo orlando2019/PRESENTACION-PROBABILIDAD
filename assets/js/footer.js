@@ -1,26 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Cargar el footer dinámicamente con ruta relativa según la ubicación
-    let footerPath = 'footer.html';
-    const path = window.location.pathname;
-    if (path.includes('geometria.html')) {
-        footerPath = '../../assets/pages/footer.html';
-    } else if (path.includes('animales.html')) {
-        footerPath = '../../assets/pages/footer.html';
-    } else if (path.includes('index.html') || path === '/' || path === '/index.html') {
-        footerPath = 'assets/pages/footer.html';
-    } else if (path.includes('assets/pages/')) {
-        footerPath = 'footer.html';
-    }
-    
+    // Siempre usa la ruta absoluta desde la raíz del sitio
+    const footerPath = '/assets/pages/footer.html';
     console.log('Cargando footer desde:', footerPath);
-    
     fetch(footerPath)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Error al cargar el footer: ${response.status}`);
-            }
-            return response.text();
-        })
         .then(data => {
             // Insertar el footer en el contenedor y asegurar ancho completo
             const footerContainer = document.getElementById('footer-container');
