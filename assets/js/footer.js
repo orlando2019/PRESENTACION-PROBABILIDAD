@@ -24,29 +24,32 @@ document.addEventListener('DOMContentLoaded', function() {
             footerContainer.style.display = 'block';
             footerContainer.style.visibility = 'visible';
             
-            // Establecer el año actual
-            const yearElement = document.getElementById('current-year');
-            if (yearElement) {
-                yearElement.textContent = new Date().getFullYear();
-            } else {
-                console.warn('No se encontró el elemento para el año actual');
-            }
-            
-            // Personalizar el título del footer según la página
-            const pageTitle = document.title;
-            const footerTitle = document.querySelector('.footer-title');
-            
-            if (footerTitle) {
-                if (pageTitle.includes('Geometría') || window.location.href.includes('geometria')) {
-                    footerTitle.textContent = 'Árbol de Figuras Geométricas';
-                } else if (pageTitle.includes('Animales') || window.location.href.includes('animales')) {
-                    footerTitle.textContent = 'Clasificador de Animales';
+            // Esperar a que el DOM del footer se cargue completamente
+            setTimeout(() => {
+                // Establecer el año actual
+                const yearElement = document.getElementById('current-year');
+                if (yearElement) {
+                    yearElement.textContent = new Date().getFullYear();
                 } else {
-                    footerTitle.textContent = 'Simulador de Probabilidad';
+                    console.warn('No se encontró el elemento para el año actual');
                 }
-            } else {
-                console.warn('No se encontró el elemento del título del footer');
-            }
+                
+                // Personalizar el título del footer según la página
+                const pageTitle = document.title;
+                const footerTitle = document.querySelector('.footer-title');
+                
+                if (footerTitle) {
+                    if (pageTitle.includes('Geometría') || window.location.href.includes('geometria')) {
+                        footerTitle.textContent = 'Árbol de Figuras Geométricas';
+                    } else if (pageTitle.includes('Animales') || window.location.href.includes('animales')) {
+                        footerTitle.textContent = 'Clasificador de Animales';
+                    } else {
+                        footerTitle.textContent = 'Simulador de Probabilidad';
+                    }
+                } else {
+                    console.warn('No se encontró el elemento del título del footer');
+                }
+            }, 100); // Esperar 100ms para asegurar que el DOM esté listo
             
             console.log('Footer cargado correctamente');
         })
