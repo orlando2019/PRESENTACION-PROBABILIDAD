@@ -720,6 +720,11 @@ function initAnimalClassification() {
     } else {
         initializeTree();
     }
+
+    // Mostrar el árbol de decisiones automáticamente al cargar la página
+    if (typeof initAnimalClassification.showTreeVisualization === 'function') {
+        initAnimalClassification.showTreeVisualization();
+    }
 }
 
 // Iniciar la clasificación de animales si esta página se carga directamente
