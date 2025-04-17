@@ -1,0 +1,191 @@
+/* animales.css - Estilos para el clasificador de animales (mobile-first, BEM, flexbox, variables) */
+
+:root {
+    --animal-bg: #f8f9fa;
+    --animal-card: #fff;
+    --animal-primary: #28a745;
+    --animal-secondary: #007bff;
+    --animal-warning: #ffc107;
+    --animal-info: #17a2b8;
+    --animal-shadow: 0 4px 8px rgba(0,0,0,0.08);
+    --animal-radius: 10px;
+}
+
+.animal-section-title {
+    margin-bottom: 2rem;
+    color: #3c3c3c;
+    border-bottom: 2px solid #6c757d;
+    padding-bottom: 0.5rem;
+}
+
+.animal-card {
+    border-radius: var(--animal-radius);
+    box-shadow: var(--animal-shadow);
+    background: var(--animal-card);
+    margin-bottom: 1.25rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+.animal-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.simulator {
+    min-height: 300px;
+    background: var(--animal-bg);
+    border-radius: var(--animal-radius);
+    padding: 1rem;
+}
+
+.question-container {
+    background: var(--animal-bg);
+    padding: 1.25rem;
+    border-radius: var(--animal-radius);
+    margin-bottom: 1rem;
+}
+
+.question-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    color: #212529;
+}
+
+.options-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.options-container .btn {
+    margin: 0;
+    transition: all 0.3s;
+}
+
+.options-container .btn:hover {
+    transform: scale(1.05);
+}
+
+.result-container {
+    background: #e9f7ef;
+    padding: 1.25rem;
+    border-radius: var(--animal-radius);
+    text-align: center;
+    display: none;
+}
+
+.result-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.7rem;
+    color: var(--animal-primary);
+}
+
+.result-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--animal-primary);
+}
+
+.result-description {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+.result-path {
+    text-align: left;
+    background: #fff;
+    padding: 0.7rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.tree-section {
+    margin-top: 2rem;
+}
+
+.tree-container {
+    width: 100%;
+    height: 350px;
+    border: 1px solid #dee2e6;
+    border-radius: var(--animal-radius);
+    overflow: auto;
+    position: relative;
+    background: #fff;
+}
+
+.tree-controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 100;
+    background: rgba(255,255,255,0.8);
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    gap: 2px;
+}
+
+.tree-controls button {
+    margin: 0;
+}
+
+.node__circle {
+    fill: #69b3a2;
+    stroke: #69b3a2;
+    stroke-width: 2px;
+}
+
+.node__circle--result {
+    fill: #ff8c00;
+    stroke: #ff8c00;
+}
+
+.node__circle--active {
+    fill: #ff416c;
+    stroke: #ff416c;
+}
+
+.link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 2px;
+}
+
+.node__text {
+    font-size: 0.75rem;
+    font-family: Arial, sans-serif;
+}
+
+/* Responsive: mobile-first */
+@media (min-width: 768px) {
+    .tree-container {
+        height: 400px;
+    }
+    .result-icon {
+        font-size: 3rem;
+    }
+    .result-title {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .animal-card, .simulator, .question-container, .result-container, .tree-container {
+        padding: 0.7rem;
+    }
+    .tree-container {
+        height: 250px;
+    }
+    .result-icon {
+        font-size: 2rem;
+    }
+    .result-title {
+        font-size: 1.1rem;
+    }
+} 

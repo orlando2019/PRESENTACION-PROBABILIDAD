@@ -1,157 +1,126 @@
-// Configuración inicial
-const treeData = {
-    balls: { red: 2, blue: 3 },
-    totalBalls: 5
-};
-
-// Función para simular una extracción
-function simulateExtraction() {
-    const results = {
-        'Roja-Roja': 0,
-        'Roja-Azul': 0,
-        'Azul-Roja': 0,
-        'Azul-Azul': 0
-    };
+document.addEventListener('DOMContentLoaded', function() {
+    // Verificación de carga de scripts
+    console.log("Script principal cargado correctamente");
     
-    const numSimulations = parseInt(document.getElementById('num-simulations').value) || 100;
-    
-    for (let i = 0; i < numSimulations; i++) {
-        // Primera extracción
-        const firstBall = Math.random() < (treeData.balls.red / treeData.totalBalls) ? 'Roja' : 'Azul';
-        
-        // Segunda extracción (dependiente de la primera)
-        let secondBall;
-        if (firstBall === 'Roja') {
-            // Quedan 1 roja y 3 azules
-            secondBall = Math.random() < (1/4) ? 'Roja' : 'Azul';
+    // Comprobar si las funciones/objetos de los otros scripts están disponibles
+    if (window.location.pathname.includes('geometria.html')) {
+        if (typeof DecisionTree === 'undefined') {
+            console.error("Error: La clase DecisionTree no está cargada. Verifica que decisionTree.js se cargó correctamente.");
         } else {
-            // Quedan 2 rojas y 2 azules
-            secondBall = Math.random() < (1/2) ? 'Roja' : 'Azul';
+            console.log("DecisionTree cargado correctamente");
         }
-        
-        results[`${firstBall}-${secondBall}`]++;
     }
     
-    displayResults(results, numSimulations);
-}
-
-// Función para mostrar los resultados
-function displayResults(results, total) {
-    const resultsDiv = document.getElementById('simulation-results');
-    resultsDiv.innerHTML = `
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Resultados de ${total} simulaciones:</h5>
-                <ul class="list-group">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Roja-Roja
-                        <span class="badge bg-primary rounded-pill">${(results['Roja-Roja'] / total * 100).toFixed(2)}%</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Roja-Azul
-                        <span class="badge bg-primary rounded-pill">${(results['Roja-Azul'] / total * 100).toFixed(2)}%</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Azul-Roja
-                        <span class="badge bg-primary rounded-pill">${(results['Azul-Roja'] / total * 100).toFixed(2)}%</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Azul-Azul
-                        <span class="badge bg-primary rounded-pill">${(results['Azul-Azul'] / total * 100).toFixed(2)}%</span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    `;
-}
-
-// Función para reiniciar la simulación
-function resetSimulation() {
-    document.getElementById('simulation-results').innerHTML = '';
-    document.getElementById('num-simulations').value = '100';
-}
-
-// Dibujar el diagrama de árbol
-function drawTree() {
-    const width = 800;
-    const height = 400;
-    const margin = { top: 20, right: 90, bottom: 30, left: 90 };
-
-    // Limpiar el contenedor antes de dibujar
-    d3.select("#tree-diagram").html("");
+    // Configuración del diagrama de árbol
+    const margin = {top: 20, right: 90, bottom: 30, left: 90};
+    const width = 800 - margin.left - margin.right;
+    const height = 400 - margin.top - margin.bottom;
 
     const svg = d3.select("#tree-diagram")
         .append("svg")
-        .attr("width", width)
-        .attr("height", height)
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
         .append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    const treeLayout = d3.tree()
-        .size([height - margin.top - margin.bottom, width - margin.left - margin.right]);
-
-    const root = d3.hierarchy({
+    // Datos para el diagrama de árbol
+    const treeData = {
         name: "Inicio",
         children: [
             {
                 name: "Roja (2/5)",
                 children: [
-                    { name: "Roja (1/4)" },
-                    { name: "Azul (3/4)" }
+                    {name: "Roja (1/4)", value: 0.1},
+                    {name: "Azul (3/4)", value: 0.3}
                 ]
             },
             {
                 name: "Azul (3/5)",
                 children: [
-                    { name: "Roja (1/2)" },
-                    { name: "Azul (1/2)" }
+                    {name: "Roja (2/4)", value: 0.3},
+                    {name: "Azul (2/4)", value: 0.3}
                 ]
             }
         ]
-    });
+    };
 
+    // Configuración del layout del árbol
+    const treeLayout = d3.tree()
+        .size([height, width]);
+
+    const root = d3.hierarchy(treeData);
     const nodes = treeLayout(root);
 
-    // Agregar enlaces
+    // Dibujar los enlaces
     svg.selectAll(".link")
-        .data(nodes.links())
+        .data(nodes.descendants().slice(1))
         .enter()
         .append("path")
         .attr("class", "link")
-        .attr("d", d3.linkHorizontal()
-            .x(d => d.y)
-            .y(d => d.x))
-        .style("fill", "none")
-        .style("stroke", "#ccc")
-        .style("stroke-width", "2px");
+        .attr("d", d => {
+            return "M" + d.y + "," + d.x
+                + "C" + (d.y + d.parent.y) / 2 + "," + d.x
+                + " " + (d.y + d.parent.y) / 2 + "," + d.parent.x
+                + " " + d.parent.y + "," + d.parent.x;
+        });
 
-    // Agregar nodos
+    // Dibujar los nodos
     const node = svg.selectAll(".node")
         .data(nodes.descendants())
         .enter()
         .append("g")
         .attr("class", "node")
-        .attr("transform", d => `translate(${d.y},${d.x})`);
+        .attr("transform", d => "translate(" + d.y + "," + d.x + ")");
 
+    // Añadir círculos a los nodos
     node.append("circle")
         .attr("r", 10)
-        .style("fill", "#fff")
-        .style("stroke", "#4a90e2")
-        .style("stroke-width", "2px");
+        .style("fill", d => {
+            if (d.data.name.includes("Roja")) return "#d6292c";
+            if (d.data.name.includes("Azul")) return "#1e56a0";
+            return "#fff";
+        });
 
+    // Añadir texto a los nodos
     node.append("text")
         .attr("dy", ".35em")
         .attr("x", d => d.children ? -13 : 13)
         .style("text-anchor", d => d.children ? "end" : "start")
         .text(d => d.data.name);
-}
 
-// Inicializar cuando el documento esté listo
-document.addEventListener('DOMContentLoaded', function() {
-    // Dibujar el diagrama de árbol
-    drawTree();
-    
-    // Agregar event listeners para los botones
-    document.getElementById('simulate-btn').addEventListener('click', simulateExtraction);
-    document.getElementById('reset-btn').addEventListener('click', resetSimulation);
+    // Función para calcular la probabilidad teórica
+    function calculateProbability(first, second) {
+        if (first === 'Roja' && second === 'Roja') return '1/10';
+        if (first === 'Roja' && second === 'Azul') return '3/10';
+        if (first === 'Azul' && second === 'Roja') return '3/10';
+        if (first === 'Azul' && second === 'Azul') return '3/10';
+    }
+
+    // Inicializar MathJax
+    if (window.MathJax) {
+        MathJax.typeset();
+    }
+
+    // Smooth scroll para la navegación
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            
+            if (targetElement) {
+                const navbarHeight = document.querySelector('.navbar').offsetHeight;
+                const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // Establecer el año actual de forma dinámica
+    document.getElementById('current-year').textContent = new Date().getFullYear();
 }); 

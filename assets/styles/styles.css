@@ -1,10 +1,21 @@
 :root {
-    --bg-color: #f8f9fa;
+    --bg-color: #f0f8ff; /* Azul claro para el fondo */
     --card-bg: #ffffff;
     --text-color: #333333;
-    --primary-color: #4a90e2;
-    --secondary-color: #2c3e50;
-    --accent-color: #e74c3c;
+    --primary-color: #1e56a0; /* Azul oscuro */
+    --secondary-color: #d6292c; /* Rojo */
+    --accent-color: #163172; /* Azul más oscuro */
+}
+
+/* Reset básico y box-sizing */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
 }
 
 body {
@@ -12,17 +23,19 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     padding-top: 80px;
+    line-height: 1.6;
 }
 
 .container {
+    width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
-    margin-top: 20px;
+    padding: 1.25rem;
+    margin-top: 1.25rem;
 }
 
 h1, h2, h5 {
-    color: var(--text-color);
+    color: var(--primary-color);
 }
 
 .card {
@@ -30,81 +43,91 @@ h1, h2, h5 {
     border: 1px solid rgba(0, 0, 0, 0.1);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem;
     transition: transform 0.3s ease;
+    border-top: 3px solid var(--primary-color);
+    display: flex;
+    flex-direction: column;
 }
 
 .card:hover {
     transform: translateY(-5px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+    border-top: 3px solid var(--secondary-color);
 }
 
-.card-body {
-    padding: 25px;
+.card__body {
+    padding: 1.5rem;
 }
 
 .example {
-    background-color: rgba(74, 144, 226, 0.05);
+    background-color: rgba(30, 86, 160, 0.05); /* Azul claro */
     border-radius: 8px;
-    padding: 20px;
-    margin-top: 20px;
+    padding: 1.25rem;
+    margin-top: 1.25rem;
     border: 1px solid rgba(0, 0, 0, 0.1);
+    border-left: 4px solid var(--secondary-color); /* Rojo */
 }
 
-.example h5 {
-    color: var(--primary-color);
-    margin-bottom: 15px;
+.example__title {
+    color: var(--secondary-color);
+    margin-bottom: 0.9rem;
 }
 
-.example ul {
-    padding-left: 20px;
+.example__list {
+    padding-left: 1.25rem;
 }
 
-#tree-diagram {
+.tree-diagram {
     background-color: var(--card-bg);
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-    padding: 20px;
-    margin: 20px 0;
+    padding: 1.25rem;
+    margin: 1.25rem 0;
+    width: 100%;
+    min-height: 200px;
+    overflow-x: auto;
 }
 
-.node circle {
+.node__circle {
     fill: var(--card-bg);
     stroke: var(--text-color);
     stroke-width: 2px;
 }
 
-.node text {
-    font-size: 12px;
+.node__text {
+    font-size: 0.75rem;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     fill: var(--text-color);
 }
 
 .link {
     fill: none;
-    stroke: rgba(255, 255, 255, 0.3);
+    stroke: #ccc;
     stroke-width: 2px;
 }
 
 .btn-primary {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
-    padding: 10px 20px;
+    padding: 0.625rem 1.25rem;
     border-radius: 5px;
     transition: all 0.3s ease;
+    color: white;
+    font-weight: 500;
 }
 
 .btn-primary:hover {
-    background-color: #2980b9;
-    border-color: #2980b9;
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
     transform: translateY(-2px);
 }
 
-#simulation-results {
+.simulation-results {
     background-color: rgba(255, 255, 255, 0.05);
-    padding: 15px;
+    padding: 0.9rem;
     border-radius: 8px;
-    margin-top: 15px;
+    margin-top: 0.9rem;
     border-left: 4px solid var(--secondary-color);
 }
 
@@ -121,32 +144,32 @@ h1, h2, h5 {
     left: 0;
     right: 0;
     z-index: 1000;
-    background-color: var(--card-bg) !important;
+    background-color: var(--primary-color) !important;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     height: 60px;
 }
 
-.navbar-brand {
+.navbar__brand {
     font-weight: bold;
-    color: var(--text-color) !important;
+    color: white !important;
 }
 
-.nav-link {
-    color: var(--text-color) !important;
-    padding: 10px 15px;
+.navbar__link {
+    color: white !important;
+    padding: 0.625rem 0.9rem;
     border-radius: 5px;
     transition: all 0.3s ease;
 }
 
-.nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: var(--primary-color) !important;
+.navbar__link:hover {
+    background-color: var(--secondary-color);
+    color: white !important;
 }
 
 /* Estilos para las secciones */
 section {
-    scroll-margin-top: 100px;
-    padding-top: 20px;
+    scroll-margin-top: 80px;
+    padding-top: 1.25rem;
 }
 
 /* Estilos para las listas */
@@ -157,11 +180,11 @@ ul {
 
 ul li {
     position: relative;
-    padding-left: 20px;
-    margin-bottom: 8px;
+    padding-left: 1.25rem;
+    margin-bottom: 0.5rem;
 }
 
-ul li:before {
+ul li::before {
     content: "•";
     color: var(--primary-color);
     position: absolute;
@@ -169,26 +192,65 @@ ul li:before {
 }
 
 /* Estilos para los ejemplos */
-.example ul li {
-    margin-bottom: 5px;
+.example__list li {
+    margin-bottom: 0.3rem;
 }
 
-.example ul li ul {
-    margin-top: 5px;
+.example__list ul {
+    margin-top: 0.3rem;
 }
 
-/* Estilos responsivos */
-@media (max-width: 768px) {
+/* Mobile-first: estilos base para móviles */
+.flex-row {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Paneles laterales apilados en móvil */
+@media (min-width: 768px) {
+    .flex-row {
+        flex-direction: row;
+        gap: 2rem;
+    }
+}
+
+/* Mejoras para desktop */
+@media (min-width: 992px) {
     .container {
-        padding: 10px;
+        padding: 2rem;
     }
-    
-    .card-body {
-        padding: 15px;
+    .card__body {
+        padding: 2rem;
     }
-    
-    #tree-diagram {
-        height: 300px;
+}
+
+/* Ajustes de tarjetas y diagramas en móvil */
+@media (max-width: 767.98px) {
+    .container {
+        padding: 0.5rem;
+    }
+    .card__body {
+        padding: 0.7rem;
+    }
+    .tree-diagram {
+        padding: 0.5rem;
+        min-height: 150px;
+    }
+    .btn-primary, .btn-secondary {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
     }
 }
 
@@ -202,7 +264,7 @@ ul li:before {
 }
 
 .tree-explanation h4 {
-    color: var(--primary-color);
+    color: var(--secondary-color);
     margin-bottom: 15px;
 }
 
@@ -224,7 +286,7 @@ ul li:before {
 }
 
 .step-number {
-    background-color: var(--primary-color);
+    background-color: var(--secondary-color);
     color: white;
     width: 30px;
     height: 30px;
@@ -237,10 +299,11 @@ ul li:before {
 }
 
 .step-content {
-    background-color: rgba(74, 144, 226, 0.05);
+    background-color: rgba(30, 86, 160, 0.05); /* Azul claro */
     padding: 15px;
     border-radius: 8px;
     flex-grow: 1;
+    border-left: 3px solid var(--primary-color);
 }
 
 .step-content ul {
@@ -252,13 +315,15 @@ ul li:before {
     margin-bottom: 8px;
 }
 
+/* Botón secundario */
 .btn-secondary {
     background-color: var(--secondary-color);
     border-color: var(--secondary-color);
     color: white;
-    padding: 10px 20px;
+    padding: 0.625rem 1.25rem;
     border-radius: 5px;
     transition: all 0.3s ease;
+    font-weight: 500;
 }
 
 .btn-secondary:hover {

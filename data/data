@@ -1,0 +1,112 @@
+{
+  "name": "AnimalClassification",
+  "root": {
+    "question": "¿Es un vertebrado?",
+    "options": [
+      {
+        "answer": "Sí",
+        "next": {
+          "question": "¿Vive en el agua?",
+          "options": [
+            {
+              "answer": "Sí",
+              "next": {
+                "question": "¿Tiene aletas y branquias?",
+                "options": [
+                  {
+                    "answer": "Sí",
+                    "result": "Pez"
+                  },
+                  {
+                    "answer": "No",
+                    "result": "Anfibio"
+                  }
+                ]
+              }
+            },
+            {
+              "answer": "No",
+              "next": {
+                "question": "¿Es de sangre caliente?",
+                "options": [
+                  {
+                    "answer": "Sí",
+                    "next": {
+                      "question": "¿Tiene plumas?",
+                      "options": [
+                        {
+                          "answer": "Sí",
+                          "result": "Ave"
+                        },
+                        {
+                          "answer": "No",
+                          "result": "Mamífero"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "answer": "No",
+                    "result": "Reptil"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "answer": "No",
+        "next": {
+          "question": "¿Tiene exoesqueleto?",
+          "options": [
+            {
+              "answer": "Sí",
+              "next": {
+                "question": "¿Tiene seis patas?",
+                "options": [
+                  {
+                    "answer": "Sí",
+                    "result": "Insecto"
+                  },
+                  {
+                    "answer": "No",
+                    "next": {
+                      "question": "¿Tiene ocho patas?",
+                      "options": [
+                        {
+                          "answer": "Sí",
+                          "result": "Arácnido"
+                        },
+                        {
+                          "answer": "No",
+                          "result": "Crustáceo"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "answer": "No",
+              "next": {
+                "question": "¿Tiene tentáculos?",
+                "options": [
+                  {
+                    "answer": "Sí",
+                    "result": "Molusco"
+                  },
+                  {
+                    "answer": "No",
+                    "result": "Gusano"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+} 

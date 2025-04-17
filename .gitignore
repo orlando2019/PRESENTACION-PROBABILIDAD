@@ -1,23 +1,29 @@
-# Archivos a excluir
-probilidad.html
+# Archivos de trabajo y exportaciones
+probabilidad.html
 probabilidad.md
-probabilidad.MD
 pro.md
 
 # Archivos del sistema
 .DS_Store
 Thumbs.db
 
-# Archivos de entorno
+# Archivos de entorno y configuración
+.cursorrules
 .env
 .env.local
+.windsurfrules
 
-# Archivos de dependencias
+# Dependencias
 node_modules/
 vendor/
 
-# Archivos de compilación
-dist/
-build/
+# Archivos de compilación y distribución
+*.min.css
 *.min.js
-*.min.css 
+build/
+dist/# Archivos de entorno y configuración
+.cursorrules
+.cursor
+.env
+.env.local
+.windsurfrules
