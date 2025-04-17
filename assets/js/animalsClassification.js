@@ -12,6 +12,9 @@ function loadAnimalClassification() {
 
 // Función para inicializar la clasificación (evita conflictos de alcance)
 function initAnimalClassification() {
+    // Hacer disponible la referencia para el script de conexión
+    window.initAnimalClassification = initAnimalClassification;
+    
     // Instancia del árbol de decisiones
     const animalTree = new DecisionTree();
     
@@ -136,7 +139,6 @@ function initAnimalClassification() {
     // Referencias a elementos del DOM
     const animalsResetBtn = document.getElementById('animals-reset-btn');
     const animalsShowTreeBtn = document.getElementById('animals-show-tree-btn');
-    const animalsAutoModeBtn = document.getElementById('animals-auto-mode-btn');
     const animalQuestion = document.getElementById('animal-question');
     const animalOptions = document.getElementById('animal-options');
     const animalsTreeContainer = document.getElementById('animals-tree-container');
@@ -147,12 +149,17 @@ function initAnimalClassification() {
     const predefinedAnimals = document.getElementById('predefined-animals');
     const classifyAnimalBtn = document.getElementById('classify-animal-btn');
     
+    // Hacer disponibles las funciones para el script de conexión
+    window.handleAnswer = handleAnswer;
+    window.animalTree = animalTree;
+    window.updateQuestionUI = updateQuestionUI;
+    window.classifyAnimalAutomatically = classifyAnimalAutomatically;
+    
     // Verificar si todos los elementos del DOM fueron encontrados
     function checkDOMElements() {
         const elements = {
             'animals-reset-btn': animalsResetBtn,
             'animals-show-tree-btn': animalsShowTreeBtn,
-            'animals-auto-mode-btn': animalsAutoModeBtn,
             'animal-question': animalQuestion,
             'animal-options': animalOptions,
             'animals-tree-container': animalsTreeContainer,
@@ -175,25 +182,84 @@ function initAnimalClassification() {
         
         if (missingElements.length > 0) {
             console.error('Elementos faltantes:', missingElements);
-            return false;
+            
+            // Intenta conectar los botones disponibles
+            connectExistingButtons();
+            
+            if (missingElements.length > 3) {
+                // Si faltan muchos elementos, detener la inicialización
+                return false;
+            }
         }
         
         return true;
     }
     
+    // Conectar botones existentes - función auxiliar para manejar casos con elementos faltantes
+    function connectExistingButtons() {
+        // Conectar botones de respuesta
+        const answerOptions = document.querySelectorAll('.answer-option');
+        if (answerOptions.length > 0) {
+            answerOptions.forEach(button => {
+                button.addEventListener('click', function() {
+                    const answer = this.dataset.value || this.textContent;
+                    handleAnswer({target: {dataset: {answer: answer}}});
+                });
+            });
+        }
+        
+        // Conectar botones de ejemplo
+        const exampleButtons = document.querySelectorAll('.example-animal');
+        if (exampleButtons.length > 0) {
+            exampleButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const animalType = this.dataset.animal;
+                    if (animalType) {
+                        const selector = document.getElementById('predefined-animals');
+                        if (selector) selector.value = animalType;
+                        classifyAnimalAutomatically();
+                    }
+                });
+            });
+        }
+    }
+    
     // Inicializar el árbol de decisiones directamente con los datos incrustados
     function initializeTree() {
         try {
+            // Verificar los elementos del DOM
             if (!checkDOMElements()) {
-                console.error('Faltan elementos del DOM necesarios');
-                alert('Error al inicializar la interfaz. Faltan elementos en el HTML.');
-                return false;
+                console.warn('Faltan algunos elementos del DOM. Se intentará una inicialización parcial.');
             }
             
             // Inicializar correctamente el árbol de decisión
             if (!animalTree.loadTree(animalTreeData)) {
                 console.error('Error al cargar el árbol de decisión');
                 return false;
+            }
+            
+            // Añadir event listeners a los botones
+            if (animalsResetBtn) {
+                animalsResetBtn.addEventListener('click', resetClassification);
+            }
+            
+            if (animalsNewClassificationBtn) {
+                animalsNewClassificationBtn.addEventListener('click', resetClassification);
+            }
+            
+            if (classifyAnimalBtn) {
+                classifyAnimalBtn.addEventListener('click', classifyAnimalAutomatically);
+            }
+            
+            // También conectar directamente los botones de respuesta
+            const answerButtons = document.querySelectorAll('.answer-option');
+            if (answerButtons.length > 0) {
+                answerButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const answer = this.getAttribute('data-value') || this.textContent;
+                        handleAnswer({target: {dataset: {answer: answer}}});
+                    });
+                });
             }
             
             console.log('Árbol de clasificación de animales cargado correctamente');
@@ -218,27 +284,31 @@ function initAnimalClassification() {
             }
             
             // Actualizar la pregunta
-            animalQuestion.textContent = currentNode.question;
+            if (animalQuestion) {
+                animalQuestion.textContent = currentNode.question;
+            }
             
             // Limpiar opciones anteriores
-            animalOptions.innerHTML = '';
-            
-            // Verificar que las opciones existan
-            if (currentNode.options && Array.isArray(currentNode.options)) {
-                // Crear botones para cada opción
-                currentNode.options.forEach(option => {
-                    if (option && option.answer) {
-                        const button = document.createElement('button');
-                        button.className = 'btn btn-outline-primary m-2 animal-option';
-                        button.textContent = option.answer;
-                        button.dataset.answer = option.answer;
-                        button.addEventListener('click', handleAnswer);
-                        animalOptions.appendChild(button);
-                    }
-                });
-            } else {
-                console.error('No hay opciones disponibles para la pregunta actual');
-                showError('Error: No hay opciones disponibles');
+            if (animalOptions) {
+                animalOptions.innerHTML = '';
+                
+                // Verificar que las opciones existan
+                if (currentNode.options && Array.isArray(currentNode.options)) {
+                    // Crear botones para cada opción
+                    currentNode.options.forEach(option => {
+                        if (option && option.answer) {
+                            const button = document.createElement('button');
+                            button.className = 'btn btn-outline-primary m-2 animal-option';
+                            button.textContent = option.answer;
+                            button.dataset.answer = option.answer;
+                            button.addEventListener('click', handleAnswer);
+                            animalOptions.appendChild(button);
+                        }
+                    });
+                } else {
+                    console.error('No hay opciones disponibles para la pregunta actual');
+                    showError('Error: No hay opciones disponibles');
+                }
             }
         } catch (error) {
             console.error('Error al actualizar la UI:', error);
@@ -253,6 +323,8 @@ function initAnimalClassification() {
         if (animalTree.answerQuestion(answer)) {
             // Actualizar UI con la siguiente pregunta o resultado
             updateQuestionUI();
+            // Actualizar visualización del árbol dinámicamente
+            showTreeVisualization();
         } else {
             console.error('Error al procesar la respuesta');
             showError('Hubo un error al procesar tu respuesta. Por favor intenta de nuevo.');
@@ -270,7 +342,9 @@ function initAnimalClassification() {
         }
         
         // Ocultar panel de interacción y mostrar panel de resultados
-        animalsResultPanel.classList.remove('d-none');
+        if (animalsResultPanel) {
+            animalsResultPanel.classList.remove('d-none');
+        }
         
         // Determinar el tipo para estilos
         let typeClass = '';
@@ -405,14 +479,18 @@ function initAnimalClassification() {
         `;
         
         // Añadir contenido al panel de resultados
-        animalsResultContent.innerHTML = html;
+        if (animalsResultContent) {
+            animalsResultContent.innerHTML = html;
+        }
         
         // Mostrar el camino recorrido
-        let pathHTML = '<strong>Camino recorrido:</strong><br>';
-        path.forEach((step, index) => {
-            pathHTML += `${index + 1}. ${step.question}: <strong>${step.answer}</strong><br>`;
-        });
-        animalsPath.innerHTML = pathHTML;
+        if (animalsPath) {
+            let pathHTML = '<strong>Camino recorrido:</strong><br>';
+            path.forEach((step, index) => {
+                pathHTML += `${index + 1}. ${step.question}: <strong>${step.answer}</strong><br>`;
+            });
+            animalsPath.innerHTML = pathHTML;
+        }
     }
     
     // Mostrar un mensaje de error
@@ -421,22 +499,29 @@ function initAnimalClassification() {
         const alertElement = document.createElement('div');
         alertElement.className = 'alert alert-danger mt-3';
         alertElement.textContent = message;
+        console.error(message);
         
         // Añadir al contenedor
-        document.querySelector('#animals-interaction').prepend(alertElement);
-        
-        // Eliminar después de 5 segundos
-        setTimeout(() => {
-            alertElement.remove();
-        }, 5000);
+        const container = document.querySelector('#animals-interaction') || document.querySelector('.card-body');
+        if (container) {
+            container.prepend(alertElement);
+            
+            // Eliminar después de 5 segundos
+            setTimeout(() => {
+                alertElement.remove();
+            }, 5000);
+        }
     }
     
     // Reiniciar la clasificación
     function resetClassification() {
         animalTree.reset();
-        animalsResultPanel.classList.add('d-none');
-        animalsTreeContainer.classList.add('d-none');
+        if (animalsResultPanel) {
+            animalsResultPanel.classList.add('d-none');
+        }
         updateQuestionUI();
+        // Recargo visualización del árbol completo
+        showTreeVisualization();
     }
     
     // Mapeo de animales predefinidos a respuestas
@@ -455,6 +540,11 @@ function initAnimalClassification() {
     
     // Clasificar animal automáticamente
     function classifyAnimalAutomatically() {
+        if (!predefinedAnimals) {
+            showError('No se encontró el selector de animales predefinidos');
+            return;
+        }
+        
         const animalType = predefinedAnimals.value;
         
         if (!animalType) {
@@ -480,120 +570,148 @@ function initAnimalClassification() {
     
     // Mostrar árbol visual completo
     function showTreeVisualization() {
-        animalsTreeContainer.classList.remove('d-none');
-        animalsTreeContainer.innerHTML = '';
-        
-        const width = 800;
-        const height = 500;
-        const margin = {top: 20, right: 90, bottom: 30, left: 90};
-        
-        // Convertir los datos del árbol al formato necesario para D3
-        function convertTreeData(node) {
-            if (!node) return null;
-            
-            const result = {
-                name: node.question || node.result,
-                children: []
-            };
-            
-            if (node.options) {
-                node.options.forEach(option => {
-                    const child = {
-                        name: option.answer,
-                        children: []
-                    };
-                    
-                    if (option.result) {
-                        child.children.push({
-                            name: option.result
-                        });
-                    } else if (option.next) {
-                        const nextNode = convertTreeData(option.next);
-                        if (nextNode) {
-                            child.children.push(nextNode);
-                        }
-                    }
-                    
-                    result.children.push(child);
-                });
-            }
-            
-            return result;
-        }
-        
-        // Crear SVG
-        const svg = d3.select('#animals-tree-container')
-            .append('svg')
-            .attr('width', width + margin.left + margin.right)
-            .attr('height', height + margin.top + margin.bottom)
-            .append('g')
-            .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-        
-        // Configurar el árbol
-        const treeLayout = d3.tree().size([height, width - 200]);
-        
-        // Convertir datos
-        const treeJson = convertTreeData(animalTree.currentNode);
-        
-        if (!treeJson) {
-            animalsTreeContainer.innerHTML = '<div class="alert alert-warning">No se pudo generar la visualización del árbol</div>';
+        if (!animalsTreeContainer) {
+            showError('No se encontró el contenedor para el árbol');
             return;
         }
         
-        // Crear jerarquía
-        const root = d3.hierarchy(treeJson);
+        // Limpiar contenedor de árbol y calcular dimensiones dinámicas
+        animalsTreeContainer.innerHTML = '';
+        const margin = {top: 20, right: 90, bottom: 30, left: 90};
+        const containerRect = animalsTreeContainer.getBoundingClientRect();
+        const svgWidth = containerRect.width;
+        const svgHeight = containerRect.height;
+        const width = svgWidth - margin.left - margin.right;
+        const height = svgHeight - margin.top - margin.bottom;
         
-        // Calcular posiciones
-        treeLayout(root);
-        
-        // Dibujar enlaces
-        svg.selectAll('.link')
-            .data(root.descendants().slice(1))
-            .enter()
-            .append('path')
-            .attr('class', 'link')
-            .attr('d', d => {
-                return 'M' + d.y + ',' + d.x
-                    + 'C' + (d.y + d.parent.y) / 2 + ',' + d.x
-                    + ' ' + (d.y + d.parent.y) / 2 + ',' + d.parent.x
-                    + ' ' + d.parent.y + ',' + d.parent.x;
-            });
-        
-        // Crear nodos
-        const node = svg.selectAll('.node')
-            .data(root.descendants())
-            .enter()
-            .append('g')
-            .attr('class', d => 'node' + (d.children ? ' node--internal' : ' node--leaf'))
-            .attr('transform', d => 'translate(' + d.y + ',' + d.x + ')');
-        
-        // Añadir círculos a los nodos
-        node.append('circle')
-            .attr('r', 10)
-            .style('fill', d => {
-                // Colorear según tipo o nivel
-                if (d.data.name === animalTree.currentNode.question) return '#ffca7a';
-                if (d.data.name.includes('vertebrado')) return '#d4f1f9';
-                if (['Pez', 'Anfibio', 'Reptil', 'Ave', 'Mamífero'].includes(d.data.name)) return '#e5ffe5';
-                if (['Insecto', 'Arácnido', 'Crustáceo', 'Molusco', 'Gusano'].includes(d.data.name)) return '#ffe5e5';
-                return '#ffffff';
-            });
-        
-        // Añadir etiquetas de texto
-        node.append('text')
-            .attr('dy', '.35em')
-            .attr('x', d => d.children ? -13 : 13)
-            .style('text-anchor', d => d.children ? 'end' : 'start')
-            .text(d => d.data.name)
-            .style('font-size', '12px')
-            .each(function(d) {
-                // Truncar texto muy largo
-                const text = d3.select(this);
-                if (text.node().getComputedTextLength() > 120) {
-                    let shortText = d.data.name.substring(0, 20) + '...';
-                    text.text(shortText);
+        try {
+            // Convertir los datos del árbol al formato necesario para D3
+            function convertTreeData(node) {
+                if (!node) return null;
+                
+                const result = {
+                    name: node.question || node.result,
+                    children: []
+                };
+                
+                if (node.options) {
+                    node.options.forEach(option => {
+                        const child = {
+                            name: option.answer,
+                            children: []
+                        };
+                        
+                        if (option.result) {
+                            child.children.push({
+                                name: option.result
+                            });
+                        } else if (option.next) {
+                            const nextNode = convertTreeData(option.next);
+                            if (nextNode) {
+                                child.children.push(nextNode);
+                            }
+                        }
+                        
+                        result.children.push(child);
+                    });
                 }
+                
+                return result;
+            }
+            
+            // Crear SVG dinámico para llenar 100% del contenedor
+            const svg = d3.select('#animals-tree-container')
+                .append('svg')
+                .attr('width', svgWidth)
+                .attr('height', svgHeight)
+                .append('g')
+                .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+            
+            // Configurar el árbol para ocupar todo el espacio disponible
+            const treeLayout = d3.tree().size([height, width]);
+            
+            // Convertir datos
+            const treeJson = convertTreeData(animalTree.root); // Usar root, no currentNode
+            
+            if (!treeJson) {
+                animalsTreeContainer.innerHTML = '<div class="alert alert-warning">No se pudo generar la visualización del árbol</div>';
+                return;
+            }
+            
+            // Crear jerarquía
+            const root = d3.hierarchy(treeJson);
+            
+            // Calcular posiciones
+            treeLayout(root);
+            
+            // Dibujar enlaces
+            svg.selectAll('.link')
+                .data(root.descendants().slice(1))
+                .enter()
+                .append('path')
+                .attr('class', 'link')
+                .attr('d', d => {
+                    return 'M' + d.y + ',' + d.x
+                        + 'C' + (d.y + d.parent.y) / 2 + ',' + d.x
+                        + ' ' + (d.y + d.parent.y) / 2 + ',' + d.parent.x
+                        + ' ' + d.parent.y + ',' + d.parent.x;
+                })
+                .style('fill', 'none')
+                .style('stroke', '#ccc')
+                .style('stroke-width', '2px');
+            
+            // Crear nodos
+            const node = svg.selectAll('.node')
+                .data(root.descendants())
+                .enter()
+                .append('g')
+                .attr('class', d => 'node' + (d.children ? ' node--internal' : ' node--leaf'))
+                .attr('transform', d => 'translate(' + d.y + ',' + d.x + ')');
+            
+            // Añadir círculos a los nodos
+            node.append('circle')
+                .attr('r', 10)
+                .style('fill', d => {
+                    // Colorear según tipo o nivel
+                    if (d.data.name === animalTree.currentNode.question) return '#ffca7a';
+                    if (d.data.name.includes('vertebrado')) return '#d4f1f9';
+                    if (['Pez', 'Anfibio', 'Reptil', 'Ave', 'Mamífero'].includes(d.data.name)) return '#e5ffe5';
+                    if (['Insecto', 'Arácnido', 'Crustáceo', 'Molusco', 'Gusano'].includes(d.data.name)) return '#ffe5e5';
+                    return '#ffffff';
+                })
+                .style('stroke', '#4CAF50')
+                .style('stroke-width', '2px');
+            
+            // Añadir etiquetas de texto
+            node.append('text')
+                .attr('dy', '.35em')
+                .attr('x', d => d.children ? -13 : 13)
+                .style('text-anchor', d => d.children ? 'end' : 'start')
+                .text(d => d.data.name)
+                .style('font-size', '12px')
+                .each(function(d) {
+                    // Truncar texto muy largo
+                    const text = d3.select(this);
+                    if (text.node().getComputedTextLength() > 120) {
+                        let shortText = d.data.name.substring(0, 20) + '...';
+                        text.text(shortText);
+                    }
+                });
+                
+            // Botón para cerrar el árbol
+            const closeButton = document.createElement('button');
+            closeButton.className = 'btn btn-warning hide-tree-btn';
+            closeButton.innerHTML = '<i class="fas fa-eye-slash mr-1"></i> Ocultar Árbol';
+            closeButton.addEventListener('click', function() {
+                animalsTreeContainer.classList.add('d-none');
             });
+            
+            animalsTreeContainer.prepend(closeButton);
+            
+        } catch (error) {
+            console.error('Error al mostrar el árbol:', error);
+            animalsTreeContainer.innerHTML = '<div class="alert alert-danger">Error al generar el árbol: ' + error.message + '</div>';
+        }
     }
     
     // Inicializar cuando se cargue el DOM
@@ -602,17 +720,11 @@ function initAnimalClassification() {
     } else {
         initializeTree();
     }
-    
-    // Añadir event listeners
-    if (animalsResetBtn) animalsResetBtn.addEventListener('click', resetClassification);
-    if (animalsShowTreeBtn) animalsShowTreeBtn.addEventListener('click', showTreeVisualization);
-    if (animalsNewClassificationBtn) animalsNewClassificationBtn.addEventListener('click', resetClassification);
-    if (classifyAnimalBtn) classifyAnimalBtn.addEventListener('click', classifyAnimalAutomatically);
 }
 
 // Iniciar la clasificación de animales si esta página se carga directamente
 document.addEventListener('DOMContentLoaded', function() {
-    // Verificar si estamos en la página de animales (no en geometria.html con pestañas)
+    // Verificar si estamos en la página de animales
     if (window.location.pathname.includes('animales.html')) {
         loadAnimalClassification();
     }

@@ -1,0 +1,48 @@
+.node circle {
+    stroke: #555;
+    stroke-width: 1.5px;
+}
+.node text {
+    font-size: 14px;
+}
+.link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 2px;
+}
+.active-node circle {
+    stroke-width: 3px;
+    stroke: #000;
+}
+.highlighted-path {
+    stroke: #163172;
+    stroke-width: 3px;
+}
+#tree-container {
+    overflow: auto;
+    max-width: 100%;
+}
+.figure-info {
+    padding: 20px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+.triangle { background-color: #d4f1f9; }
+.quadrilateral { background-color: #ffe5e5; }
+.circle { background-color: #e5ffe5; }
+.polygon { background-color: #f9e5ff; }
+.text-purple { color: #7b2cbf; }
+
+/* Estilos para clasificación de animales */
+.vertebrate { background-color: #d4f1f9; }
+.invertebrate { background-color: #ffe5e5; }
+.mammal { background-color: #e5ffe5; }
+.bird { background-color: #f9e5ff; }
+.fish { background-color: #fff9c4; }
+.reptile { background-color: #ffccbc; }
+.amphibian { background-color: #c8e6c9; }
+.insect { background-color: #bbdefb; }
+.arachnid { background-color: #d1c4e9; }
+.nav-tabs .nav-link.active {
+    font-weight: bold;
+}

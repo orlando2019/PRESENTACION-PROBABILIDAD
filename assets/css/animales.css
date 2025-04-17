@@ -1,0 +1,220 @@
+/* Estilos para el Clasificador de Animales */
+
+/* Estilos generales */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow-x: hidden; /* Prevenir scroll horizontal */
+    padding-top: 56px; /* espacio para el nav */
+}
+
+/* Estilos para el footer */
+footer {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+footer ul.list-unstyled li {
+    white-space: normal;
+    margin-bottom: 8px;
+}
+
+footer a {
+    display: inline-block;
+    word-break: break-word;
+}
+
+footer .container-fluid {
+    width: 100vw;
+    max-width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#footer-container {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Estilos para el árbol de decisión */
+#animals-tree-container {
+    width: 100%;
+    height: 500px;
+    overflow: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    position: relative;
+}
+
+/* Estilos para los nodos y conexiones del árbol */
+.node circle {
+    fill: #fff;
+    stroke: #4CAF50;
+    stroke-width: 2px;
+}
+
+.node--internal circle {
+    fill: #f8f9fa;
+}
+
+.node--leaf circle {
+    fill: #e8f5e9;
+}
+
+.node text {
+    font-size: 12px;
+    font-family: sans-serif;
+}
+
+.link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 2px;
+}
+
+/* Estilos para los resultados */
+#animals-result-panel {
+    border-color: #4CAF50;
+}
+
+.figure-info {
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.figure-info h3 {
+    color: #2E7D32;
+    margin-bottom: 15px;
+}
+
+/* Clases de colores para tipos de animales */
+.figure-info.fish {
+    background-color: #e1f5fe;
+    border-left: 5px solid #03a9f4;
+}
+
+.figure-info.amphibian {
+    background-color: #e8f5e9;
+    border-left: 5px solid #4caf50;
+}
+
+.figure-info.reptile {
+    background-color: #fff3e0;
+    border-left: 5px solid #ff9800;
+}
+
+.figure-info.bird {
+    background-color: #e8eaf6;
+    border-left: 5px solid #3f51b5;
+}
+
+.figure-info.mammal {
+    background-color: #fce4ec;
+    border-left: 5px solid #e91e63;
+}
+
+.figure-info.insect {
+    background-color: #f1f8e9;
+    border-left: 5px solid #8bc34a;
+}
+
+.figure-info.arachnid {
+    background-color: #ede7f6;
+    border-left: 5px solid #673ab7;
+}
+
+.figure-info.vertebrate {
+    background-color: #e0f7fa;
+    border-left: 5px solid #00bcd4;
+}
+
+.figure-info.invertebrate {
+    background-color: #fff8e1;
+    border-left: 5px solid #ffc107;
+}
+
+/* Estilos para botones de opciones */
+.animal-option {
+    margin: 5px;
+    min-width: 100px;
+}
+
+/* Camino de clasificación */
+#animals-path {
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 4px;
+    line-height: 1.6;
+}
+
+/* Mejoras para dispositivos móviles */
+@media (max-width: 768px) {
+    .animal-option {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+/* Iconos de animales */
+#result-icon {
+    font-size: 3rem;
+    color: #4CAF50;
+    margin-bottom: 15px;
+}
+
+/* Links y botones */
+a.list-group-item-action:hover {
+    background-color: #f1f8e9;
+}
+
+.btn-success {
+    background-color: #4CAF50;
+    border-color: #43A047;
+}
+
+.btn-success:hover {
+    background-color: #388E3C;
+    border-color: #2E7D32;
+}
+
+/* Ajustes para iconos de FontAwesome */
+.fas.fa-paw, 
+.fas.fa-frog, 
+.fas.fa-fish,
+.fas.fa-spider,
+.fas.fa-crow {
+    margin-right: 5px;
+}
+
+/* Estilos para que el contenedor ocupe todo el ancho disponible */
+.container {
+    max-width: 100% !important;
+    padding: 0 30px;
+}
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: 100% !important;
+    }
+}
+
+/* Ajuste para navbar fija */
+.sticky-top {
+    position: fixed !important;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+}
+
+/* Posición del botón Ocultar Árbol */
+.hide-tree-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1051;
+} 
